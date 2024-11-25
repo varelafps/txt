@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOCALIZAÇÃO DE PEDIDOS</title>
+    <style>
+      body {
+        font-family: Bahnschrift, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        padding: 20px;
+        margin: 0;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+        color: #003366;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    form {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 14px; /* Aumentado */
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 18px; /* Aumentado */
+    }
+
+    button {
+        background-color: #003366;
+        color: #ffe657;
+        padding: 14px 20px; /* Aumentado */
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 20px; /* Aumentado */
+        display: block;
+        margin: 20px auto;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #001F4D;
+    }
+
+    #resultado-consulta {
+        background-color: #e9ecef;
+        padding: 12px; /* Aumentado */
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .ultimo-registro {
+        background-color: #d1e7dd; /* Cor de fundo verde claro */
+        border: 1px solid #0f5132; /* Borda verde escura */
+        padding: 12px; /* Aumentado */
+        border-radius: 5px;
+        margin: 10px 0;
+    }
+
+    p {
+        margin: 12px 0; /* Aumentado */
+    }
+
+    hr {
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 30px 0;
+    }
+
+    .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .error-message {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 12px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .logo-container {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .logo {
+        width: 200px; /* Tamanho padrão do logo */
+        height: auto;
+    }
+
+    /* Estilos responsivos */
+    @media (max-width: 600px) {
+        .logo {
+            width: 80px; /* Reduz o tamanho do logo em telas menores */
+        }
+
+        input[type="text"], button {
+            font-size: 16px; /* Tamanho reduzido para telas pequenas */
+        }
+
+        button {
+            padding: 12px 16px; /* Menor padding em telas pequenas */
+        }
+    }
+
+    /* Estilos para desktop */
+    @media (min-width: 601px) {
+        input[type="text"], button {
+            font-size: 20px; /* Tamanho maior para telas grandes */
+        }
+
+        button {
+            padding: 16px 24px; /* Maior padding para telas grandes */
+        }
+    }
+    .registro {
+    border: 1px solid #ddd; /* Borda cinza clara */
+    border-radius: 5px; /* Cantos arredondados */
+    padding: 15px; /* Preenchimento interno */
+    margin: 10px 0; /* Margem entre os registros */
+    background-color: #f9f9f9; /* Fundo claro */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra suave */
+}
+
+.ultimo-registro {
+    background-color: #c8e6c9; /* Verde claro para a última subordem */
+    border: 1px solid #a5d6a7; /* Borda verde */
+}
+
+    </style>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOCALIZAÇÃO DE PEDIDOS</title>
+    <style>
+        body {
+            font-family: Bahnschrift, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        form {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px; /* Aumentado */
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 18px; /* Aumentado */
+        }
+
+        button {
+            background-color: #003366;
+            color: #ffe657;
+            padding: 14px 20px; /* Aumentado */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 20px; /* Aumentado */
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #001F4D;
+        }
+
+        #resultado-consulta {
+            background-color: #e9ecef;
+            padding: 12px; /* Aumentado */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .ultimo-registro {
+            background-color: #d1e7dd; /* Cor de fundo verde claro */
+            border: 1px solid #0f5132; /* Borda verde escura */
+            padding: 12px; /* Aumentado */
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        p {
+            margin: 12px 0; /* Aumentado */
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 30px 0;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logo {
+            width: 200px; /* Tamanho padrão do logo */
+            height: auto;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 600px) {
+            .logo {
+                width: 80px; /* Reduz o tamanho do logo em telas menores */
+            }
+
+            input[type="text"], button {
+                font-size: 16px; /* Tamanho reduzido para telas pequenas */
+            }
+
+            button {
+                padding: 12px 16px; /* Menor padding em telas pequenas */
+            }
+        }
+
+        /* Estilos para desktop */
+        @media (min-width: 601px) {
+            input[type="text"], button {
+                font-size: 20px; /* Tamanho maior para telas grandes */
+            }
+
+            button {
+                padding: 16px 24px; /* Maior padding para telas grandes */
+            }
+        }
+    </style>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOCALIZAÇÃO DE PEDIDOS</title>
+    <style>
+        body {
+            font-family: Bahnschrift, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .menu-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .menu-button {
+            background-color: #003366;
+            color: #fff;
+            padding: 14px;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background-color: #001F4D;
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            width: 200px;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            padding: 12px;
+            color: #333;
+            text-decoration: none;
+            text-align: left;
+            font-size: 18px;
+        }
+
+        .menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        form {
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px; /* Aumentado */
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 18px; /* Aumentado */
+        }
+
+        button {
+            background-color: #003366;
+            color: #ffe657;
+            padding: 14px 20px; /* Aumentado */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 20px; /* Aumentado */
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #001F4D;
+        }
+
+        #resultado-consulta {
+            background-color: #e9ecef;
+            padding: 12px; /* Aumentado */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .ultimo-registro {
+            background-color: #d1e7dd; /* Cor de fundo verde claro */
+            border: 1px solid #0f5132; /* Borda verde escura */
+            padding: 12px; /* Aumentado */
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        p {
+            margin: 12px 0; /* Aumentado */
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 30px 0;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logo {
+            width: 200px; /* Tamanho padrão do logo */
+            height: auto;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 600px) {
+            .logo {
+                width: 80px; /* Reduz o tamanho do logo em telas menores */
+            }
+
+            input[type="text"], button {
+                font-size: 16px; /* Tamanho reduzido para telas pequenas */
+            }
+
+            button {
+                padding: 12px 16px; /* Menor padding em telas pequenas */
+            }
+        }
+
+        /* Estilos para desktop */
+        @media (min-width: 601px) {
+            input[type="text"], button {
+                font-size: 20px; /* Tamanho maior para telas grandes */
+            }
+
+            button {
+                padding: 16px 24px; /* Maior padding para telas grandes */
+            }
+        }
+    </style>
+</head>
+<body>
+        <!-- Menu Button -->
+        <div class="menu-container">
+            <button class="menu-button" onclick="toggleMenu()">☰ Menu</button>
+            <div class="menu" id="menu">
+                <a href="pesquisa.html">ITENS</a>
+                <a href="#">Abas 2</a>
+                <a href="#">Abas 3</a>
+                <a href="#">Abas 4</a>
+                <a href="#">Abas 5</a>
+            </div>
+        </div>
+    
+        <script>
+            // Função para alternar a visibilidade do menu
+            function toggleMenu() {
+                var menu = document.getElementById("menu");
+                if (menu.style.display === "none" || menu.style.display === "") {
+                    menu.style.display = "block";  // Exibe o menu
+                } else {
+                    menu.style.display = "none";  // Esconde o menu
+                }
+            }
+        </script>
+    <div class="logo-container">
+        <img src="http://www.fiedler.com.br/wp-content/uploads/2017/06/logo-fiedler.png" 
+             alt="Logo da Empresa" class="logo">
+    </div>
+    <h1>LOCALIZAÇÃO DE PEDIDOS</h1>
+
+    <!-- Mensagem de sucesso -->
+    <div id="mensagem" class="success-message" style="display: none;"></div>
+
+    <!-- Formulário para registro -->
+    <form id="form-ov">
+        <label for="numero-ov">ORDEM DE VENDA:</label>
+        <input type="text" id="numero-ov" required>
+
+        <label for="localizacao">LOCALIZAÇÃO:</label>
+        <input type="text" id="localizacao" required>
+
+        <label for="estoquista">ESTOQUISTA:</label>
+        <input type="text" id="estoquista" required>
+
+        <button type="submit">REGISTRAR</button>
+    </form>
+
+    <!-- Formulário para consulta -->
+    <form id="form-consulta">
+        <label for="consulta-ov">CONSULTAR:</label>
+        <input type="text" id="consulta-ov" required>
+        <button type="submit">CONSULTAR</button>
+    </form>
+
+    <!-- Resultados da consulta -->
+
+    <div id="resultado-consulta"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA0HRXo7DQO-hBiEYcLoHDp4aeCr8m5fbY",
+            authDomain: "banco-de-dados-58326.firebaseapp.com",
+            databaseURL: "https://banco-de-dados-58326-default-rtdb.firebaseio.com",
+            projectId: "banco-de-dados-58326",
+            storageBucket: "banco-de-dados-58326.appspot.com",
+            messagingSenderId: "65412346301",
+            appId: "1:65412346301:web:b0ef7ff01e8c935841e2d4",
+            measurementId: "G-K7TSSDVQ88"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Função para obter o nome do estoquista
+        function obterNomeEstoquista(codigoEstoquista) {
+            const estoquistas = {
+                "1": "Gebien",
+                "2": "Luiz",
+                "4": "Jackson",
+                "5": "Carlos",
+                "6": "Kauã",
+                "7": "Schermann",
+                "8": "Thiago",
+                "10": "Thomas",
+                "11": "Externo"
+            };
+            return estoquistas[codigoEstoquista] || "Desconhecido";
+        }
+
+        // Função para salvar a nova ordem de venda
+        async function salvarRegistroOV(numeroOv, localizacao, estoquista) {
+            const subOrderCount = await contarSubordens(numeroOv);
+            const novaSubOrdem = numeroOv + '-' + (subOrderCount + 1);
+
+            const dataAtual = new Date();
+            const data = dataAtual.toLocaleDateString();
+            const hora = dataAtual.toLocaleTimeString();
+
+            const nomeEstoquista = obterNomeEstoquista(estoquista);
+
+            set(ref(database, 'registrosOV/' + numeroOv + '/' + novaSubOrdem), {
+                Localizacao: localizacao,
+                Estoquista: nomeEstoquista,
+                Data: data,
+                Hora: hora
+            }).then(() => {
+                mostrarMensagem("Registro de OV feito com sucesso!", true);
+                // Limpar os campos após o registro
+                document.getElementById("numero-ov").value = '';
+                document.getElementById("localizacao").value = '';
+                document.getElementById("estoquista").value = '';
+            });
+        }
+
+        // Função para contar as subordens
+        async function contarSubordens(numeroOv) {
+            const dbRef = ref(database);
+            const snapshot = await get(child(dbRef, 'registrosOV/' + numeroOv));
+
+            if (snapshot.exists()) {
+                const subOrdens = snapshot.val();
+                return Object.keys(subOrdens).length;
+            } else {
+                return 0;
+            }
+        }
+
+        // Função para mostrar a mensagem de sucesso
+        function mostrarMensagem(mensagem, sucesso) {
+            const mensagemDiv = document.getElementById("mensagem");
+            mensagemDiv.style.display = "block";
+            mensagemDiv.textContent = mensagem;
+            mensagemDiv.className = sucesso ? "success-message" : "error-message";
+            setTimeout(() => {
+                mensagemDiv.style.display = "none";
+            }, 3000);
+        }
+
+        // Função para consultar a ordem de venda
+// Função para consultar a ordem de venda
+// Função para consultar a ordem de venda
+async function consultarOV(numeroOv) {
+    const dbRef = ref(database);
+    const snapshot = await get(child(dbRef, 'registrosOV/' + numeroOv));
+
+    const resultadoDiv = document.getElementById("resultado-consulta");
+    resultadoDiv.innerHTML = ''; // Limpar resultados anteriores
+
+    if (snapshot.exists()) {
+        const subOrdens = snapshot.val();
+        const subOrdemKeys = Object.keys(subOrdens);
+        const ultimaSubOrdem = subOrdemKeys[subOrdemKeys.length - 1]; // Pega a última subordem
+        const ultimaSubOrdemDados = subOrdens[ultimaSubOrdem];
+
+        // Mostrar a última subordem com fundo verde
+        const ultimoRegistroDiv = document.createElement("div");
+        ultimoRegistroDiv.className = "registro ultimo-registro"; // Adicionando classe para estilização
+        ultimoRegistroDiv.innerHTML = `
+            <p><strong>ORDEM DE VENDA:</strong> ${ultimaSubOrdem}</p>
+            <p><strong>LOCALIZAÇÃO:</strong> ${ultimaSubOrdemDados.Localizacao}</p>
+            <p><strong>ESTOQUISTA:</strong> ${ultimaSubOrdemDados.Estoquista}</p>
+            <p><strong>DATA:</strong> ${ultimaSubOrdemDados.Data}</p>
+            <p><strong>HORA:</strong> ${ultimaSubOrdemDados.Hora}</p>
+        `;
+        resultadoDiv.appendChild(ultimoRegistroDiv);
+
+        // Adicionando botão para mostrar outras subordens
+        if (subOrdemKeys.length > 1) {
+            const botaoMostrarOutras = document.createElement("button");
+            botaoMostrarOutras.textContent = "Ver outras subordens";
+            botaoMostrarOutras.onclick = function () {
+                mostrarOutrasSubordens(subOrdens, subOrdemKeys);
+                botaoMostrarOutras.style.display = "none"; // Esconder o botão após o clique
+            };
+            resultadoDiv.appendChild(botaoMostrarOutras);
+        }
+    } else {
+        resultadoDiv.innerHTML = "<p>Nenhuma ordem de venda encontrada.</p>";
+    }
+}
+
+// Função para mostrar outras subordens
+function mostrarOutrasSubordens(subOrdens, subOrdemKeys) {
+    const resultadoDiv = document.getElementById("resultado-consulta");
+    const subOrdemDiv = document.createElement("div");
+
+    // Adicionar cada subordem
+    for (let i = 0; i < subOrdemKeys.length - 1; i++) { // Ignorar a última subordem
+        const subOrdemKey = subOrdemKeys[i];
+        const subOrdemDados = subOrdens[subOrdemKey];
+
+        const subOrdemItem = document.createElement("div");
+        subOrdemItem.className = "registro"; // Classe para estilização padrão
+        subOrdemItem.innerHTML = `
+            <p><strong>ORDEM DE VENDA:</strong> ${subOrdemKey}</p>
+            <p><strong>LOCALIZAÇÃO:</strong> ${subOrdemDados.Localizacao}</p>
+            <p><strong>ESTOQUISTA:</strong> ${subOrdemDados.Estoquista}</p>
+            <p><strong>DATA:</strong> ${subOrdemDados.Data}</p>
+            <p><strong>HORA:</strong> ${subOrdemDados.Hora}</p>
+        `;
+        subOrdemDiv.appendChild(subOrdemItem);
+    }
+    resultadoDiv.appendChild(subOrdemDiv);
+}
+
+
+
+        // Evento para o formulário de registro
+        document.getElementById("form-ov").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const numeroOv = document.getElementById("numero-ov").value;
+            const localizacao = document.getElementById("localizacao").value;
+            const estoquista = document.getElementById("estoquista").value;
+            salvarRegistroOV(numeroOv, localizacao, estoquista);
+        });
+
+        // Evento para o formulário de consulta
+        document.getElementById("form-consulta").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const numeroOv = document.getElementById("consulta-ov").value;
+            consultarOV(numeroOv);
+        });
+    </script>
+</body>
+</html>

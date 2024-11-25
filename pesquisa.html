@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONSULTA DE CÓDIGO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Impede a rolagem na página */
+        }
+
+        .menu-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .menu-button {
+            background-color: #003366;
+            color: #fff;
+            padding: 13px;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background-color: #001f4d;
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #fff;
+            box-shadow: 0 4px 8px hsla(0, 0%, 32%, 0.507);
+            border-radius: 8px;
+            width: 200px;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            padding: 12px;
+            color: #333;
+            text-decoration: none;
+            text-align: left;
+            font-size: 18px;
+        }
+
+        .menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logo {
+            width: 200px; /* Tamanho padrão do logo */
+            height: auto;
+        }
+
+        /* Ajustes para o contêiner fixo */
+        .container {
+            position: fixed; /* Torna o contêiner fixo na tela */
+            top: 50%; /* Coloca o contêiner no meio da tela */
+            left: 50%; /* Coloca o contêiner no meio da tela */
+            transform: translate(-50%, -50%); /* Centraliza exatamente no meio */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            z-index: 999;
+            overflow: hidden; /* Impede a rolagem dentro do contêiner */
+        }
+
+        h1 {
+            color: #001F4D;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            padding: 10px;
+            width: 80%;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            margin-top: 10px;
+        }
+
+        .search-box:focus {
+            border-color: #007BFF;
+        }
+
+        .result-container {
+            margin-top: 20px;
+        }
+
+        .result {
+            background-color: #dbfce2;
+            padding: 10px;
+            border: 1px solid #155724;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="http://www.fiedler.com.br/wp-content/uploads/2017/06/logo-fiedler.png" 
+             alt="Logo da Empresa" class="logo">
+    </div>
+    
+    <!-- Menu Button -->
+    <div class="menu-container">
+        <button class="menu-button" onclick="toggleMenu()">☰ Menu</button>
+        <div class="menu" id="menu">
+            <a href="pesquisa.html">LOCALIZAÇÃO ITENS</a>
+            <a href="teste.html">PEDIDOS</a>
+            <a href="#">Abas 3</a>
+            <a href="#">Abas 4</a>
+            <a href="#">Abas 5</a>
+        </div>
+    </div>
+
+    <script>
+        // Função para alternar a visibilidade do menu
+        function toggleMenu() {
+            var menu = document.getElementById("menu");
+            if (menu.style.display === "none" || menu.style.display === "") {
+                menu.style.display = "block";  // Exibe o menu
+            } else {
+                menu.style.display = "none";  // Esconde o menu
+            }
+        }
+    </script>
+
+    <div class="container">
+        <h1>CONSULTA DE CÓDIGO</h1>
+        <div class="search-container">
+            <input type="text" id="codeInput" class="search-box" placeholder="Digite o código..." onkeyup="searchCode()">
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <!-- O resultado será exibido aqui -->
+        </div>
+
+        <div class="note">
+            <p>Exemplo de Códigos: 101, 102, 103, 104, 105</p>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados de códigos e seus respectivos itens e localizações
+        const codeDatabase = {
+            "101": { name: "Conexão reta 1/4 - 8mm", location: "Aisle 1, Shelf 1" },
+            "102": { name: "Tubo flexível 1/2 - 10mm", location: "Aisle 1, Shelf 2" },
+            "103": { name: "Registro de gaveta 3/4", location: "Aisle 2, Shelf 1" },
+            "104": { name: "Válvula de esfera 1", location: "Aisle 2, Shelf 3" },
+            "105": { name: "Mangueira 2 metros", location: "Aisle 3, Shelf 2" }
+        };
+
+        // Função para realizar a pesquisa do código
+        function searchCode() {
+            const input = document.getElementById("codeInput").value;
+            const resultContainer = document.getElementById("resultContainer");
+
+            // Limpa o resultado anterior
+            resultContainer.innerHTML = '';
+
+            if (input === '') {
+                return; // Se o campo estiver vazio, não faz nada
+            }
+
+            // Verifica se o código existe no banco de dados
+            if (codeDatabase[input]) {
+                // Exibe o nome do item e sua localização
+                resultContainer.innerHTML = `<div class="result">
+                                                <strong>Item Encontrado!</strong><br>
+                                                Nome: ${codeDatabase[input].name}<br>
+                                                Localização: ${codeDatabase[input].location}
+                                              </div>`;
+            } else {
+                // Exibe uma mensagem de erro se o código não for encontrado
+                resultContainer.innerHTML = '<div class="error-message">Código não encontrado. Tente novamente.</div>';
+            }
+        }
+    </script>
+
+</body>
+</html>
